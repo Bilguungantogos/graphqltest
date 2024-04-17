@@ -3,7 +3,7 @@ const Todo = require("../../models/Todo");
 module.exports = {
   Query: {
     async todo(_, { ID }) {
-      return await Todo.findbyId(ID);
+      return await Todo.findById(ID);
     },
     async getTodos(_, { amount }) {
       return await Todo.find().sort({ createdAt: -1 }).limit(amount);
