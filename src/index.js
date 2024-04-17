@@ -27,9 +27,4 @@ mongoose
   })
   .catch((error) => {
     console.error("Error while connecting to MongoDB:", error);
-    console.log(
-      process.env.mongoUserName,
-      process.env.mongoUserPassword,
-      process.env.mongoDatabase
-    );
   });

@@ -1,37 +1,35 @@
-const Recipe = require("../../models/Recipe");
+const Todo = require("../../models/Todo");
 
 module.exports = {
   Query: {
-    async recipe(_, { ID }) {
-      return await Recipe.findbyId(ID);
+    async todo(_, { ID }) {
+      return await Todo.findbyId(ID);
     },
-    async getRecipes(_, { amount }) {
-      return await Recipe.find().sort({ createdAt: -1 }).limit(amount);
+    async getTodos(_, { amount }) {
+      return await Todo.find().sort({ createdAt: -1 }).limit(amount);
     },
   },
   Mutation: {
-    async createRecipe(_, { recipeInput: { name, description } }) {
-      const createRecipe = new Recipe({
-        name: name,
+    async createTodo(_, { todoInput: { title, description } }) {
+      const createTodo = new Todo({
+        title: title,
         description: description,
         createdAt: new Date().toISOString(),
-        thumbmsUp: 0,
-        thumbsDown: 0,
       });
-      const res = await createRecipe.save();
+      const res = await createTodo.save();
       console.log(res._doc);
       return {
         id: res.id,
         ...res._doc,
       };
     },
-    async deleteRecipe(_, { ID }) {
-      const wasDeleted = (await Recipe.deleteOne({ _id: ID })).deletedCount;
+    async deleteTodo(_, { ID }) {
+      const wasDeleted = (await Todo.deleteOne({ _id: ID })).deletedCount;
       return wasDeleted;
     },
-    async editRecipe(_, { ID, recipeInput: { name, description } }) {
+    async editTodoInput(_, { ID, todoInput: { name, description } }) {
       const wasEdited = (
-        await Recipe.updateOne(
+        await Todo.updateOne(
           { _id: ID },
           { name: name, description: description }
         )

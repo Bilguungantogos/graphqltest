@@ -1,31 +1,29 @@
 const { gql } = require("apollo-server");
 
 module.exports = gql`
-  type Recipe {
-    name: String
+  type Todo {
+    title: String
     description: String
     createdAt: String
-    thumbsUp: Int
-    thumbsDown: Int
   }
 
-  input RecipeInput {
-    name: String
+  input TodoInput {
+    title: String
     description: String
   }
 
-  input editRecipeInput {
-    name: String
+  input editTodoInput {
+    title: String
   }
 
   type Query {
-    recipe(ID: ID!): Recipe!
-    getRecipes(amount: Int): [Recipe]
+    todo(ID: ID!): Todo!
+    getTodos(amount: Int): [Todo]
   }
 
   type Mutation {
-    createRecipe(recipeInput: RecipeInput): Recipe!
-    deleteRecipe(ID: ID!): Boolean
-    editRecipe(ID: ID!, recipeInput: RecipeInput): Boolean
+    createTodo(todoInput: TodoInput): Todo!
+    deleteTodo(ID: ID!): Boolean
+    editTodoInput(ID: ID!, todoInput: TodoInput): Boolean
   }
 `;
