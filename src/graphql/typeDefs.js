@@ -1,16 +1,79 @@
 const { gql } = require("apollo-server");
 
 module.exports = gql`
-  type Todo {
-    id: ID!
+  type Job {
+    id: ID
     title: String
     description: String
-    createdAt: String
+    requirements: Requirement
+    minSalary: String
+    maxSalary: String
+    status: JobStatus
+    applicant: [ID]
   }
 
-  input TodoInput {
-    title: String
-    description: String
+  type Requirement {
+    skill: String
+    education: String
+    language: String
+    qualification: String
+    workExperience: String
+    others: String
+  }
+
+  type Applicant {
+    userId: ID
+    firstname: String
+    lastname: String
+    email: String
+    phone: String
+    cv: String
+    status: ApplicantStatus
+  }
+
+  enum ApplicantStatus {
+    PENDING
+    SCHEDULED
+    INTERVIEW_STAGE
+    PASSED
+    REJECTED
+  }
+
+  enum JobStatus {
+    DRAFTED
+    PUBLISHED
+    CLOSED
+  }
+
+  input CreateJobInput {
+    title: String!
+    description: String!
+    requirements: RequirementInput!
+    minSalary: String!
+    maxSalary: String!
+    status: JobStatus!
+  }
+
+  input RequirementInput {
+    skill: String
+    education: String
+    language: String
+    qualification: String
+    workExperience: String
+    others: String
+  }
+
+  input UpdateJobInput {
+    title: String!
+    description: String!
+    requirements: RequirementInput
+    salary: Float
+    minSalary: String
+    maxSalary: String
+  }
+
+  input ChangeApplicantStatusInput {
+    status: ApplicantStatus
   }
 
   input editTodoInput {
@@ -18,13 +81,17 @@ module.exports = gql`
   }
 
   type Query {
-    todo(ID: ID!): Todo!
-    getTodos(amount: Int): [Todo]
+    getJobList: [Job!]!
+    getJobDetails(jobId: ID!): Job
+    getApplicants(jobId: ID): [Applicant]
   }
 
   type Mutation {
-    createTodo(todoInput: TodoInput): Todo!
-    deleteTodo(ID: ID!): Boolean
-    editTodoInput(ID: ID!, todoInput: TodoInput): Boolean
+    createJob(input: CreateJobInput): Job!
+    updateJob(id: ID!, input: UpdateJobInput): Job!
+    deleteJob(id: ID!): ID!
+
+    changeApplicantsStatus(input: ChangeApplicantStatusInput): Applicant!
+    publishJobAd(jobId: ID): Job!
   }
 `;

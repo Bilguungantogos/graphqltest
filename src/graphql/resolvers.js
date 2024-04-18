@@ -1,40 +1,142 @@
-const Todo = require("../../models/Todo");
+const Job = require("../../models/Job");
+const Applicant = require("../../models/Applicant");
 
 module.exports = {
   Query: {
-    async todo(_, { ID }) {
-      return await Todo.findById(ID);
+    async getJobList() {
+      return await Job.find();
     },
-    async getTodos(_, { amount }) {
-      return await Todo.find().sort({ createdAt: -1 }).limit(amount);
+    async getJobDetails(_, { ID }) {
+      return await Job.findById(ID);
+    },
+    async getApplicants(_, { ID }) {
+      return await Applicant.find({ jobId: ID });
     },
   },
   Mutation: {
-    async createTodo(_, { todoInput: { title, description } }) {
-      const createTodo = new Todo({
-        title: title,
-        description: description,
-        createdAt: new Date().toISOString(),
+    async createJob(
+      _,
+      {
+        input: {
+          title,
+          description,
+          requirements,
+          minSalary,
+          maxSalary,
+          status,
+        },
+      }
+    ) {
+      const createJob = new Job({
+        title,
+        description,
+        requirements: requirements,
+        minSalary,
+        maxSalary,
+        status,
       });
-      const res = await createTodo.save();
-      console.log(res._doc);
-      return {
-        id: res.id,
-        ...res._doc,
-      };
+
+      const res = await createJob.save();
+      return res;
     },
-    async deleteTodo(_, { ID }) {
-      const wasDeleted = (await Todo.deleteOne({ _id: ID })).deletedCount;
-      return wasDeleted;
-    },
-    async editTodoInput(_, { ID, todoInput: { name, description } }) {
-      const wasEdited = (
-        await Todo.updateOne(
-          { _id: ID },
-          { name: name, description: description }
-        )
-      ).modifiedCount;
-      return wasEdited; // 1 bol editlesen 0 bol editleegui
+    async updateJob(
+      _,
+      {
+        id,
+        input: {
+          title,
+          description,
+          requirements,
+          minSalary,
+          maxSalary,
+          salary,
+        },
+      }
+    ) {
+      const updatedJob = Job.updateOne(
+        { _id: id },
+        {
+          title,
+          description,
+          requirements,
+          salary,
+          minSalary,
+          maxSalary,
+        }
+      );
+      console.log(
+        id,
+        title,
+        description,
+        requirements,
+        minSalary,
+        maxSalary,
+        salary
+      );
+      return updatedJob;
     },
   },
 };
+
+// mutation CreateJob {
+//   createJob(input: {
+//     title: "",
+//     description: "",
+//     requirements: {
+//       skill: "",
+//       education: "",
+//       language: "",
+//       qualification: "",
+//       workExperience: "",
+//       others: ""
+//     },
+//     minSalary: "",
+//     maxSalary: "",
+//     status: DRAFTED
+//   }) {
+//     title
+//     description
+//     requirements {
+//       skill
+//       education
+//       language
+//       qualification
+//       workExperience
+//       others
+//     }
+//     minSalary
+//     maxSalary
+//     status
+//   }
+// }
+
+// mutation UpdateJob {
+//   updateJob(id: "6620cd4b6254ea90dbe689b1", input: {
+//     title: "Updated Title",
+//     description: "Updated Description",
+//     requirements: {
+//       skill: "Updated Skill",
+//       education: "Updated Education",
+//       language: "Updated Language",
+//       qualification: "Updated Qualification",
+//       workExperience: "Updated Work Experience",
+//       others: "Updated Others"
+//     },
+//     minSalary: "3000",
+//     maxSalary: "5000",
+//   }) {
+//     title
+//     description
+//     requirements {
+//       skill
+//       education
+//       language
+//       qualification
+//       workExperience
+//       others
+//     }
+//     minSalary
+//     maxSalary
+//     status
+//   }
+// }
