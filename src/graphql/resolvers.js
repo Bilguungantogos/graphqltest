@@ -39,6 +39,21 @@ module.exports = {
       const res = await createJob.save();
       return res;
     },
+    async createApplicant(
+      _,
+      { input: { firstname, lastname, email, phone, cv } }
+    ) {
+      const createApplicant = new Applicant({
+        firstname,
+        lastname,
+        email,
+        phone,
+        cv,
+      });
+
+      const res = await createApplicant.save();
+      return res;
+    },
     async updateJob(
       _,
       {
@@ -78,21 +93,32 @@ module.exports = {
           salary,
         }
       );
-      console.log(
-        id,
-        title,
-        description,
-        skill,
-        education,
-        language,
-        qualification,
-        workExperience,
-        others,
-        minSalary,
-        maxSalary,
-        salary
+      const newUpdatedJob = await Job.findById(id);
+      return newUpdatedJob;
+    },
+    async deleteJob(_, { id }) {
+      const deletedJob = await Job.findByIdAndDelete(id);
+      if (!deletedJob) {
+        console.warn(`Job with ID ${id} not found.`);
+        return;
+      }
+      return deletedJob._id;
+    },
+    async changeApplicantsStatus(_, { id, input: { status } }) {
+      const changeApplicant = await Applicant.updateOne(
+        { _id: id },
+        { status: status }
       );
-      return updatedJob;
+      const changedApplicant = await Applicant.findById(id);
+      return changedApplicant;
+    },
+    async publishJobAd(_, { jobId }) {
+      const changeJobStatusToPublish = await Job.updateOne(
+        { _id: jobId },
+        { status: "PUBLISH" }
+      );
+      const changedJob = await Job.findById(jobId);
+      return changedJob;
     },
   },
 };
@@ -130,9 +156,9 @@ module.exports = {
 // }
 
 // mutation UpdateJob {
-//   updateJob(id: "6620cd4b6254ea90dbe689b1", input: {
-//     title: "Updated Title",
-//     description: "Updated Description",
+//   updateJob(id: "6620cd646254ea90dbe689b3", input: {
+//     title: "dadadadadada Title",
+//     description: "Updatedminmax bhq Description",
 //     requirements: {
 //       skill: "Updated Skill",
 //       education: "Updated Education",
@@ -141,8 +167,7 @@ module.exports = {
 //       workExperience: "Updated Work Experience",
 //       others: "Updated Others"
 //     },
-//     minSalary: "3000",
-//     maxSalary: "5000",
+//     maxSalary :"30"
 //   }) {
 //     title
 //     description
@@ -157,5 +182,19 @@ module.exports = {
 //     minSalary
 //     maxSalary
 //     status
+//   }
+// }
+
+// mutation{
+//   changeApplicantsStatus(id: "662216ecbe5b6edc8ece1266",input:{status:REJECTED}) {
+//     status
+//   }
+// }
+
+// mutation {
+//   publishJobAd(jobId: "6620cd6b6254ea90dbe689b5") {
+//     applicant
+//     description
+//     maxSalary
 //   }
 // }

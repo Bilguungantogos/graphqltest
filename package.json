@@ -4,8 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "env-cmd -f ./config/test.env jest --runInBand",
     "dev": "nodemon src/index.js"
+  },
+  "jest": {
+    "globalSetup": "./tests/config/globalSetup.js",
+    "globalTeardown": "./tests/config/globalTeardown.js",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "./dist"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "html"
+    ],
+    "moduleNameMapper": {
+      "^mongoose$": "<rootDir>/node_modules/mongoose"
+    }
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +36,11 @@
     "pg": "^8.11.5"
   },
   "devDependencies": {
+    "@babel/register": "^7.23.7",
     "@types/node": "^20.12.7",
+    "cross-fetch": "^4.0.0",
+    "jest": "^29.7.0",
+    "jest-cli": "^29.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }

@@ -54,6 +54,14 @@ module.exports = gql`
     status: JobStatus!
   }
 
+  input CreateApplicantInput {
+    firstname: String!
+    lastname: String!
+    email: String!
+    phone: String!
+    cv: String!
+  }
+
   input RequirementInput {
     skill: String
     education: String
@@ -88,10 +96,13 @@ module.exports = gql`
 
   type Mutation {
     createJob(input: CreateJobInput): Job!
+    createApplicant(input: CreateApplicantInput): Applicant!
     updateJob(id: ID!, input: UpdateJobInput): Job!
     deleteJob(id: ID!): ID!
-
-    changeApplicantsStatus(input: ChangeApplicantStatusInput): Applicant!
+    changeApplicantsStatus(
+      id: ID!
+      input: ChangeApplicantStatusInput
+    ): Applicant!
     publishJobAd(jobId: ID): Job!
   }
 `;
