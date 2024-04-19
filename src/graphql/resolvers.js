@@ -6,8 +6,8 @@ module.exports = {
     async getJobList() {
       return await Job.find();
     },
-    async getJobDetails(_, { ID }) {
-      return await Job.findById(ID);
+    async getJobDetails(_, { jobId }) {
+      return await Job.findById(jobId);
     },
     async getApplicants(_, { ID }) {
       return await Applicant.find({ jobId: ID });
