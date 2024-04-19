@@ -46,29 +46,48 @@ module.exports = {
         input: {
           title,
           description,
-          requirements,
+          requirements: {
+            skill,
+            education,
+            language,
+            qualification,
+            workExperience,
+            others,
+          },
           minSalary,
           maxSalary,
           salary,
         },
       }
     ) {
-      const updatedJob = Job.updateOne(
+      const updatedJob = await Job.updateOne(
         { _id: id },
         {
           title,
           description,
-          requirements,
-          salary,
+          requirements: {
+            skill,
+            education,
+            language,
+            qualification,
+            workExperience,
+            others,
+          },
           minSalary,
           maxSalary,
+          salary,
         }
       );
       console.log(
         id,
         title,
         description,
-        requirements,
+        skill,
+        education,
+        language,
+        qualification,
+        workExperience,
+        others,
         minSalary,
         maxSalary,
         salary
